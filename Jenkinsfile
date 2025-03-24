@@ -8,6 +8,7 @@ pipeline {
             steps {
                 script {
                     docker.image('openjdk:11').inside {
+                          sh 'apt-get update && apt-get install -y file'  // ✅ Install `file` command
                         sh 'ls -lah && pwd'  // Debugging step
                         sh 'chmod +x gradlew && ls -lah gradlew'
                         sh 'file gradlew'   // Check for CRLF issues
