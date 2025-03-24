@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     docker.image('openjdk:11').inside {
-                          sh 'apt-get update && apt-get install -y file'  // ✅ Install `file` command
+                        sh 'apt-get update && apt-get install -y file'  // ✅ Install `file` command
                         sh 'ls -lah && pwd'  // Debugging step
                         sh 'chmod +x gradlew && ls -lah gradlew'
                         sh 'file gradlew'   // Check for CRLF issues
@@ -28,6 +28,7 @@ pipeline {
                 }
             }
         }
+
         stage("Docker Build and Push") {
             steps {
                 script {
@@ -42,13 +43,16 @@ pipeline {
                     }
                 }
             }
-            stage('Identifying Misconfigs using Datree in Helm Charts') {
-                steps {
-                    script {
-                        dir('kubernetes/') {
-                            sh 'helm plugin list | grep datree || helm plugin install https://github.com/datreeio/helm-datree'
-                            sh 'helm datree test myapp/'
-                        }
+        }
+
+        stage("Identifying Misconfigs using Datree in Helm Charts") {
+            steps {
+                script {
+                    dir('kubernetes/') {
+                        // Ensure helm and datree are installed
+                        sh 'command -v helm || { echo "Helm not found!"; exit 1; }'
+                        sh 'helm plugin list | grep datree || helm plugin install https://github.com/datreeio/helm-datree'
+                        sh 'helm datree test myapp/'
                     }
                 }
             }
