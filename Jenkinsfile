@@ -42,17 +42,17 @@ pipeline {
                     }
                 }
             }
-        }
-
-         stage('identifying musconfigs using datree in helm charts'){
-                 steps{
-                    script{
+            stage('Identifying Misconfigs using Datree in Helm Charts') {
+                steps {
+                    script {
                         dir('kubernetes/') {
+                            sh 'helm plugin list | grep datree || helm plugin install https://github.com/datreeio/helm-datree'
                             sh 'helm datree test myapp/'
                         }
                     }
                 }
-            } 
+            }
+        }
     }
 
     post {
