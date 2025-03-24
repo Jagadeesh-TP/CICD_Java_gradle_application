@@ -42,7 +42,9 @@ pipeline {
                     }
                 }
             }
-            stage('identifying musconfigs using datree in helm charts'){
+        }
+
+         stage('identifying musconfigs using datree in helm charts'){
                  steps{
                     script{
                         dir('kubernetes/') {
@@ -51,7 +53,6 @@ pipeline {
                     }
                 }
             } 
-        }
     }
 
     post {
